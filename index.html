@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask App</title>
+</head>
+<body>
+    <h1>Upload File to Detect Anomalies</h1>
+    <form action="/api/anomalies" method="post" enctype="multipart/form-data">
+        <label for="file">Choose an Excel file:</label>
+        <input type="file" name="file" id="file" required>
+        <br><br>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="results">
+        {% if images %}
+        <h2>Results:</h2>
+        <div>
+            {% for image in images %}
+            <div>
+                <h3>{{ image.feature }}</h3>
+                <img src="data:image/png;base64,{{ image.graph }}" alt="Graph for {{ image.feature }}">
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
