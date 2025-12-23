@@ -3,5 +3,6 @@ pandas
 numpy
 scikit-learn
 matplotlib
+plotly
 openpyxl
 xlrd

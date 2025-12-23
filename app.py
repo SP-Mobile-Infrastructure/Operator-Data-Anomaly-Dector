@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 from io import BytesIO
 
 # Streamlit UI
@@ -40,11 +40,44 @@ if uploaded_file:
     st.subheader("Anomalies Detected")
     st.write(anomalies)
 
-    # Generate and display graphs
+    # Generate and display interactive charts
+    st.subheader("Interactive Charts")
+    st.write("Hover over points to see values, zoom in/out, and toggle data series on/off")
+    
     for col in df.columns:
-        fig, ax = plt.subplots()
-        ax.plot(df.index, df[col], label="Data")
-        ax.scatter(anomaly_indices, df[col].iloc[anomaly_indices], color='red', label="Anomalies")
-        ax.set_title(f"Anomalies in {col}")
-        ax.legend()
-        st.pyplot(fig)
+        fig = go.Figure()
+        
+        # Add normal data points
+        fig.add_trace(go.Scatter(
+            x=df.index,
+            y=df[col],
+            mode='lines+markers',
+            name='Normal Data',
+            line=dict(color='blue'),
+            marker=dict(size=4),
+            hovertemplate='<b>Index:</b> %{x}<br><b>Value:</b> %{y}<br><extra></extra>'
+        ))
+        
+        # Add anomaly points
+        if len(anomaly_indices) > 0:
+            fig.add_trace(go.Scatter(
+                x=anomaly_indices,
+                y=df[col].iloc[anomaly_indices],
+                mode='markers',
+                name='Anomalies',
+                marker=dict(color='red', size=8, symbol='diamond'),
+                hovertemplate='<b>Anomaly Index:</b> %{x}<br><b>Value:</b> %{y}<br><extra></extra>'
+            ))
+        
+        # Update layout for better appearance
+        fig.update_layout(
+            title=f'Anomaly Detection for {col}',
+            xaxis_title='Data Point Index',
+            yaxis_title=col,
+            hovermode='closest',
+            showlegend=True,
+            height=500
+        )
+        
+        # Display the interactive chart
+        st.plotly_chart(fig, use_container_width=True)
