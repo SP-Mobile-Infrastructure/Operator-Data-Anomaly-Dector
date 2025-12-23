@@ -6,3 +6,5 @@ matplotlib
 plotly
 openpyxl
 xlrd
+plotly
+seaborn
