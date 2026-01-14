@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
 from io import BytesIO
 from datetime import datetime, timedelta
 
