@@ -679,7 +679,7 @@ def create_transaction_summary_charts(daily_counts):
             st.write(f"• {date.strftime('%Y-%m-%d')}: {count:,} transactions")
 
 # Streamlit UI
-st.title("Saif Check Anomalies")
+st.title("Operator Data Anomoly Detector")
 st.write("Upload an Excel file to detect anomalies and analyze transaction patterns")
 
 # Sidebar for configuration
@@ -688,20 +688,6 @@ with st.sidebar:
     
     # Anomaly detection settings
     st.subheader("Anomaly Detection")
-    contamination_rate = st.slider(
-        "Contamination Rate", 
-        min_value=0.05, 
-        max_value=0.30, 
-        value=0.15, 
-        step=0.05,
-        help="Expected proportion of anomalies in the dataset"
-    )
-    
-    random_seed = st.number_input(
-        "Random Seed", 
-        value=42, 
-        help="For reproducible results"
-    )
     
     # Display options
     st.subheader("Display Options")
@@ -1085,6 +1071,10 @@ if uploaded_file:
     
     st.info(f"Analyzing {len(df.columns)} numerical columns: {', '.join(df.columns)}")
 
+    # Set default values for anomaly detection
+    contamination_rate = 0.15
+    random_seed = 42
+
     # Scale the features
     scaler = StandardScaler()
     scaled_data = scaler.fit_transform(df)
@@ -1106,12 +1096,8 @@ if uploaded_file:
     
     # Show configuration summary
     with st.expander("🔧 Analysis Configuration"):
-        col1, col2, col3 = st.columns(3)
+        col1 = st.columns(1)[0]
         with col1:
-            st.metric("Contamination Rate", f"{contamination_rate:.1%}")
-        with col2:
-            st.metric("Random Seed", int(random_seed))
-        with col3:
             st.metric("Features Analyzed", len(df.columns))
     
     st.subheader(f"Number of anomalies detected: {num_anomalies}")
